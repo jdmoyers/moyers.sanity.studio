@@ -28,7 +28,7 @@ export default {
     },
     {
       name: 'mainImage',
-      title: 'Main image',
+      title: 'Main Image',
       type: 'image',
       options: {
         hotspot: true
@@ -42,14 +42,11 @@ export default {
     },
     {
       name: 'publishedAt',
-      title: 'Published at',
+      title: 'Publish Date',
       type: 'datetime',
-      validation: Rule => Rule.required()
-    },
-    {
-      name: 'modifiedOn',
-      title: 'Modified on',
-      type: 'datetime',
+      initialValue: () => ({
+        publishedAt: new Date().toISOString()
+      }),
       validation: Rule => Rule.required()
     },
     {
@@ -72,12 +69,30 @@ export default {
     select: {
       title: 'title',
       author: 'author.name',
-      media: 'mainImage'
+      media: 'mainImage',
+      date: 'publishedAt'
     },
     prepare(selection) {
-      const { author } = selection;
+      const { author, date } = selection;
+      const formatDate = date => {
+        const yyyy = date.getFullYear();
+        const mm = date.getMonth();
+        const dd = date.getDate();
+        console.log('date', date);
+        if (dd < 10) {
+          dd = '0' + dd;
+        }
+
+        if (mm < 10) {
+          mm = '0' + mm;
+        }
+
+        return `${yyyy}-${mm}-${dd}`;
+      };
+      const humanDate = formatDate(date);
+      console.log(humanDate);
       return Object.assign({}, selection, {
-        subtitle: author && `by ${author}`
+        subtitle: author && `Published ${humanDate} by ${author}`
       });
     }
   }
