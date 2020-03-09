@@ -74,23 +74,29 @@ export default {
     },
     prepare(selection) {
       const { author, date } = selection;
+
       const formatDate = date => {
-        const yyyy = date.getFullYear();
-        const mm = date.getMonth();
-        const dd = date.getDate();
-        console.log('date', date);
-        if (dd < 10) {
-          dd = '0' + dd;
-        }
+        if (date !== undefined) {
+          const current = new Date(date);
+          const yyyy = current.getFullYear();
+          let mm = current.getMonth();
+          let dd = current.getDate();
+          if (dd < 10) {
+            dd = '0' + dd;
+          }
 
-        if (mm < 10) {
-          mm = '0' + mm;
-        }
+          if (mm < 10) {
+            mm = '0' + mm;
+          }
 
-        return `${yyyy}-${mm}-${dd}`;
+          return `${yyyy}-${mm}-${dd}`;
+        } else {
+          return null;
+        }
       };
+
       const humanDate = formatDate(date);
-      console.log(humanDate);
+
       return Object.assign({}, selection, {
         subtitle: author && `Published ${humanDate} by ${author}`
       });
